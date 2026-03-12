@@ -7,29 +7,33 @@ from generator import generate
 from flowchart import generate_flowchart
 import io
 import sys
-import streamlit as st
-import speech_recognition as sr
+
+
+# ---------- VOICE FUNCTION ----------
 
 def listen_voice():
     r = sr.Recognizer()
 
-    with sr.Microphone() as source:
-        st.write("Listening...")
-        audio = r.listen(source)
-
     try:
+        with sr.Microphone() as source:
+            st.write("Listening...")
+            audio = r.listen(source)
+
         text = r.recognize_google(audio)
         return text
+
     except:
         return "Could not understand"
 
-# ---------------- SESSION STATE ----------------
+
+# ---------- SESSION STATE ----------
 
 if "step" not in st.session_state:
     st.session_state.step = "onboarding"
     st.session_state.user_data = {}
 
-# ---------------- ONBOARDING PAGE ----------------
+
+# ---------- ONBOARDING PAGE ----------
 
 if st.session_state.step == "onboarding":
 
@@ -52,43 +56,44 @@ if st.session_state.step == "onboarding":
             "Select Output Language",
             ["Python", "C", "C++", "Java"]
         )
-        if st.button("🎤 Speak"):
-            voice_text = listen_voice()
-            st.write("You said:", voice_text)
-            start = st.form_submit_button("Start Compiler")
 
-        if start:
+        start = st.form_submit_button("Start Compiler")
 
-            # Check empty fields
-            if not first or not last or not email:
-                st.warning("Please fill all fields")
+    # voice button outside form
+    if st.button("🎤 Speak"):
+        voice_text = listen_voice()
+        st.write("You said:", voice_text)
 
-            # Gmail validation
-            elif not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
-                st.error("Wrong Email! Please enter a valid Gmail address.")
+    if start:
 
-            else:
+        if not first or not last or not email:
+            st.warning("Please fill all fields")
 
-                st.session_state.user_data = {
-                    "first": first,
-                    "last": last,
-                    "email": email,
-                    "age": age,
-                    "purpose": purpose,
-                    "language": language
-                }
+        elif not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
+            st.error("Wrong Email! Please enter Gmail")
 
-                st.session_state.step = "compiler"
-                st.rerun()
+        else:
 
-# ---------------- COMPILER PAGE ----------------
+            st.session_state.user_data = {
+                "first": first,
+                "last": last,
+                "email": email,
+                "age": age,
+                "purpose": purpose,
+                "language": language
+            }
+
+            st.session_state.step = "compiler"
+            st.rerun()
+
+
+# ---------- COMPILER PAGE ----------
 
 elif st.session_state.step == "compiler":
 
     user = st.session_state.user_data
     language = user["language"]
 
-    # Sidebar user info
     st.sidebar.title("User Info")
     st.sidebar.write(f"Name: {user['first']} {user['last']}")
     st.sidebar.write(f"Email: {user['email']}")
@@ -114,71 +119,65 @@ end"""
         height=250
     )
 
-# ---------------- VOICE INPUT ----------------
 
-    if st.button("Voice Input"):
+# ---------- VOICE INPUT ----------
 
-        r = sr.Recognizer()
+    if st.button("🎤 Voice Input"):
 
-        with sr.Microphone() as source:
+        text = listen_voice()
 
-            st.write("Listening...")
+        program += "\n" + text
 
-            audio = r.listen(source)
+        st.success("Voice added")
 
-            try:
-                text = r.recognize_google(audio)
-
-                program += "\n" + text
-
-                st.success("Voice captured")
-
-            except:
-                st.error("Voice not recognized")
 
     st.divider()
 
-# ---------------- LEXER ----------------
+
+# ---------- LEXER ----------
 
     if st.button("Run Lexer"):
 
         tokens = tokenize(program)
 
-        st.subheader("Lexer Output (Tokens)")
+        st.subheader("Tokens")
         st.write(tokens)
 
-# ---------------- PARSER ----------------
+
+# ---------- PARSER ----------
 
     if st.button("Run Parser"):
 
         tokens = tokenize(program)
         commands = parse(tokens)
 
-        st.subheader("Parser Output (Commands)")
+        st.subheader("Commands")
         st.write(commands)
 
-# ---------------- CODE GENERATOR ----------------
+
+# ---------- CODE ----------
 
     if st.button("Generate Code"):
 
         tokens = tokenize(program)
         commands = parse(tokens)
+
         code = generate(commands, language)
 
-        st.subheader(f"Generated {language} Code")
+        st.subheader("Generated Code")
         st.code(code)
 
-# ---------------- RUN PROGRAM (PYTHON ONLY) ----------------
+
+# ---------- RUN ----------
 
     if st.button("Run Program"):
 
         tokens = tokenize(program)
         commands = parse(tokens)
 
-        # execution only possible in Python
         code = generate(commands, "Python")
 
-        st.subheader("Program Output")
+        st.subheader("Output")
 
         try:
 
@@ -189,19 +188,16 @@ end"""
 
             sys.stdout = sys.__stdout__
 
-            output = buffer.getvalue()
-
-            st.code(output)
+            st.code(buffer.getvalue())
 
         except Exception as e:
             st.error(e)
 
-# ---------------- FLOWCHART ----------------
 
-    if st.button("Generate Flowchart"):
+# ---------- FLOWCHART ----------
+
+    if st.button("Flowchart"):
 
         chart = generate_flowchart(program)
-
-        st.subheader("Program Flowchart")
 
         st.graphviz_chart(chart)
