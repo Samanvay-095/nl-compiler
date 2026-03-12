@@ -25,6 +25,7 @@ def generate(commands, language):
 
         return "\n".join(code)
 
+
     if language == "Java":
 
         code = [
@@ -38,10 +39,10 @@ def generate(commands, language):
                 code.append(f"int {cmd[1]} = {cmd[2]};")
 
             elif cmd[0] == "sum":
-                code.append(f'System.out.println({cmd[1]} + {cmd[2]});')
+                code.append(f"System.out.println({cmd[1]} + {cmd[2]});")
 
             elif cmd[0] == "print":
-                code.append(f'System.out.println({cmd[1]});')
+                code.append(f"System.out.println({cmd[1]});")
 
             elif cmd[0] == "loop":
                 code.append(f"for(int i=0;i<{cmd[1]};i++)"+"{")
@@ -54,4 +55,29 @@ def generate(commands, language):
 
         return "\n".join(code)
 
-    return "// Language generation not implemented yet"
+
+    if language == "C++":
+
+        code = [
+            "#include <iostream>",
+            "using namespace std;",
+            "int main(){"
+        ]
+
+        for cmd in commands:
+
+            if cmd[0] == "declare":
+                code.append(f"int {cmd[1]} = {cmd[2]};")
+
+            elif cmd[0] == "sum":
+                code.append(f"cout << {cmd[1]} + {cmd[2]} << endl;")
+
+            elif cmd[0] == "print":
+                code.append(f"cout << {cmd[1]} << endl;")
+
+        code.append("return 0;")
+        code.append("}")
+
+        return "\n".join(code)
+
+    return "// Language not implemented"

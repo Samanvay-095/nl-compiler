@@ -8,9 +8,7 @@ from parser import parse
 from generator import generate
 from flowchart import generate_flowchart
 
-
-# ---------------- SESSION STATE ----------------
-
+# ---------- SESSION STATE ----------
 if "step" not in st.session_state:
     st.session_state.step = "onboarding"
     st.session_state.user_data = {}
@@ -23,9 +21,7 @@ repeat 2 times
 print x
 end"""
 
-
-# ---------------- USER FORM ----------------
-
+# ---------- ONBOARDING ----------
 if st.session_state.step == "onboarding":
 
     st.title("Natural Language Compiler")
@@ -37,6 +33,11 @@ if st.session_state.step == "onboarding":
         email = st.text_input("Email")
 
         age = st.number_input("Age", 1, 100)
+
+        purpose = st.selectbox(
+            "Purpose",
+            ["Learning Programming", "Hackathon Demo", "Testing"]
+        )
 
         language = st.selectbox(
             "Select Output Language",
@@ -60,15 +61,14 @@ if st.session_state.step == "onboarding":
                     "last": last,
                     "email": email,
                     "age": age,
+                    "purpose": purpose,
                     "language": language
                 }
 
                 st.session_state.step = "compiler"
                 st.rerun()
 
-
-# ---------------- COMPILER PAGE ----------------
-
+# ---------- COMPILER PAGE ----------
 elif st.session_state.step == "compiler":
 
     user = st.session_state.user_data
@@ -77,6 +77,7 @@ elif st.session_state.step == "compiler":
     st.sidebar.title("User Info")
     st.sidebar.write(f"Name: {user['first']} {user['last']}")
     st.sidebar.write(f"Email: {user['email']}")
+    st.sidebar.write(f"Purpose: {user['purpose']}")
     st.sidebar.write(f"Language: {language}")
 
     if st.sidebar.button("Reset"):
@@ -95,9 +96,7 @@ elif st.session_state.step == "compiler":
 
     st.divider()
 
-
-# -------- LEXER --------
-
+# ---------- LEXER ----------
     if st.button("Run Lexer"):
 
         tokens = tokenize(program)
@@ -105,9 +104,7 @@ elif st.session_state.step == "compiler":
         st.subheader("Lexer Output")
         st.write(tokens)
 
-
-# -------- PARSER --------
-
+# ---------- PARSER ----------
     if st.button("Run Parser"):
 
         tokens = tokenize(program)
@@ -116,9 +113,7 @@ elif st.session_state.step == "compiler":
         st.subheader("Parser Output")
         st.write(commands)
 
-
-# -------- CODE GENERATOR --------
-
+# ---------- CODE GENERATION ----------
     if st.button("Generate Code"):
 
         tokens = tokenize(program)
@@ -127,12 +122,9 @@ elif st.session_state.step == "compiler":
         code = generate(commands, language)
 
         st.subheader("Generated Code")
-
         st.code(code)
 
-
-# -------- RUN PROGRAM (PYTHON ONLY) --------
-
+# ---------- RUN PROGRAM ----------
     if st.button("Run Program"):
 
         tokens = tokenize(program)
@@ -158,11 +150,10 @@ elif st.session_state.step == "compiler":
         except Exception as e:
             st.error(e)
 
-
-# -------- FLOWCHART --------
-
+# ---------- FLOWCHART ----------
     if st.button("Generate Flowchart"):
 
         chart = generate_flowchart(program)
 
+        st.subheader("Program Flowchart")
         st.graphviz_chart(chart)
