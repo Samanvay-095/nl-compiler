@@ -1,0 +1,46 @@
+def parse(tokens):
+
+    commands = []
+
+    for line in tokens:
+
+        if not line:
+            continue
+
+        if line[0] == "create":
+            commands.append(("declare", line[2], line[-1]))
+
+        elif line[0] == "set":
+            commands.append(("set", line[1], line[-1]))
+
+        elif line[0] == "print" and "sum" in line:
+            commands.append(("sum", line[-3], line[-1]))
+
+        elif line[0] == "print" and "difference" in line:
+            commands.append(("difference", line[-3], line[-1]))
+
+        elif line[0] == "print" and "product" in line:
+            commands.append(("product", line[-3], line[-1]))
+
+        elif line[0] == "print" and "division" in line:
+            commands.append(("division", line[-3], line[-1]))
+
+        elif line[0] == "print":
+            commands.append(("print", line[1]))
+
+        elif line[0] == "repeat":
+            commands.append(("loop", line[1]))
+
+        elif line[0] == "if":
+            commands.append(("if", line[1], line[-1]))
+
+        elif line[0] == "else":
+            commands.append(("else",))
+
+        elif line[0] == "text":
+            commands.append(("text"," ".join(line[1:])))
+
+        elif line[0] == "end":
+            commands.append(("end",))
+
+    return commands
