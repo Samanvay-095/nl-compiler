@@ -10,8 +10,14 @@ def parse(tokens):
         if line[0] == "create":
             commands.append(("declare", line[2], line[-1]))
 
+        elif line[0] == "set":
+            commands.append(("set", line[1], line[-1]))
+
         elif line[0] == "print" and "sum" in line:
             commands.append(("sum", line[-3], line[-1]))
+
+        elif line[0] == "print" and "difference" in line:
+            commands.append(("difference", line[-3], line[-1]))
 
         elif line[0] == "print":
             commands.append(("print", line[1]))

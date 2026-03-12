@@ -1,14 +1,15 @@
 import streamlit as st
-import speech_recognition as sr
 import re
+import io
+import sys
+
 from lexer import tokenize
 from parser import parse
 from generator import generate
 from flowchart import generate_flowchart
-import io
-import sys
 
-# ---------- SESSION STATE ----------
+
+# ---------------- SESSION STATE ----------------
 
 if "step" not in st.session_state:
     st.session_state.step = "onboarding"
@@ -22,7 +23,8 @@ repeat 2 times
 print x
 end"""
 
-# ---------- ONBOARDING ----------
+
+# ---------------- USER FORM ----------------
 
 if st.session_state.step == "onboarding":
 
@@ -33,16 +35,12 @@ if st.session_state.step == "onboarding":
         first = st.text_input("First Name")
         last = st.text_input("Last Name")
         email = st.text_input("Email")
-        age = st.number_input("Age",1,100)
 
-        purpose = st.selectbox(
-            "Purpose",
-            ["Learning Programming","Hackathon Demo","Testing"]
-        )
+        age = st.number_input("Age", 1, 100)
 
         language = st.selectbox(
             "Select Output Language",
-            ["Python","C","C++","Java"]
+            ["Python", "C", "C++", "Java"]
         )
 
         start = st.form_submit_button("Start Compiler")
@@ -53,23 +51,23 @@ if st.session_state.step == "onboarding":
                 st.warning("Please fill all fields")
 
             elif not re.match(r"^[a-zA-Z0-9._%+-]+@gmail\.com$", email):
-                st.error("Wrong Email! Please enter a valid Gmail address.")
+                st.error("Wrong Email! Enter valid Gmail")
 
             else:
 
                 st.session_state.user_data = {
-                    "first":first,
-                    "last":last,
-                    "email":email,
-                    "age":age,
-                    "purpose":purpose,
-                    "language":language
+                    "first": first,
+                    "last": last,
+                    "email": email,
+                    "age": age,
+                    "language": language
                 }
 
                 st.session_state.step = "compiler"
                 st.rerun()
 
-# ---------- COMPILER PAGE ----------
+
+# ---------------- COMPILER PAGE ----------------
 
 elif st.session_state.step == "compiler":
 
@@ -93,42 +91,12 @@ elif st.session_state.step == "compiler":
         height=250
     )
 
-# ---------- VOICE INPUT ----------
-
-    if st.button("Voice Input"):
-
-        r = sr.Recognizer()
-
-        try:
-
-            with sr.Microphone() as source:
-
-                st.info("Listening... Speak now")
-
-                r.adjust_for_ambient_noise(source)
-
-                audio = r.listen(source)
-
-                text = r.recognize_google(audio)
-
-                st.success("Voice captured")
-
-                st.session_state.program += "\n" + text
-
-                st.rerun()
-
-        except sr.UnknownValueError:
-            st.error("Could not understand audio")
-
-        except sr.RequestError:
-            st.error("Speech recognition service unavailable")
-
-        except Exception as e:
-            st.error(f"Microphone error: {e}")
+    st.session_state.program = program
 
     st.divider()
 
-# ---------- LEXER ----------
+
+# -------- LEXER --------
 
     if st.button("Run Lexer"):
 
@@ -137,7 +105,8 @@ elif st.session_state.step == "compiler":
         st.subheader("Lexer Output")
         st.write(tokens)
 
-# ---------- PARSER ----------
+
+# -------- PARSER --------
 
     if st.button("Run Parser"):
 
@@ -147,23 +116,28 @@ elif st.session_state.step == "compiler":
         st.subheader("Parser Output")
         st.write(commands)
 
-# ---------- CODE GENERATOR ----------
+
+# -------- CODE GENERATOR --------
 
     if st.button("Generate Code"):
 
         tokens = tokenize(program)
         commands = parse(tokens)
+
         code = generate(commands, language)
 
-        st.subheader(f"Generated {language} Code")
+        st.subheader("Generated Code")
+
         st.code(code)
 
-# ---------- RUN PROGRAM ----------
+
+# -------- RUN PROGRAM (PYTHON ONLY) --------
 
     if st.button("Run Program"):
 
         tokens = tokenize(program)
         commands = parse(tokens)
+
         code = generate(commands, "Python")
 
         st.subheader("Program Output")
@@ -184,12 +158,11 @@ elif st.session_state.step == "compiler":
         except Exception as e:
             st.error(e)
 
-# ---------- FLOWCHART ----------
+
+# -------- FLOWCHART --------
 
     if st.button("Generate Flowchart"):
 
         chart = generate_flowchart(program)
 
-        st.subheader("Program Flowchart")
         st.graphviz_chart(chart)
-        
