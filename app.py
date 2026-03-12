@@ -7,6 +7,21 @@ from generator import generate
 from flowchart import generate_flowchart
 import io
 import sys
+import streamlit as st
+import speech_recognition as sr
+
+def listen_voice():
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        st.write("Listening...")
+        audio = r.listen(source)
+
+    try:
+        text = r.recognize_google(audio)
+        return text
+    except:
+        return "Could not understand"
 
 # ---------------- SESSION STATE ----------------
 
@@ -37,8 +52,10 @@ if st.session_state.step == "onboarding":
             "Select Output Language",
             ["Python", "C", "C++", "Java"]
         )
-
-        start = st.form_submit_button("Start Compiler")
+        if st.button("🎤 Speak"):
+            voice_text = listen_voice()
+            st.write("You said:", voice_text)
+            start = st.form_submit_button("Start Compiler")
 
         if start:
 
