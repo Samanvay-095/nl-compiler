@@ -8,7 +8,9 @@ from parser import parse
 from generator import generate
 from flowchart import generate_flowchart
 
+
 # ---------- SESSION STATE ----------
+
 if "step" not in st.session_state:
     st.session_state.step = "onboarding"
     st.session_state.user_data = {}
@@ -21,7 +23,12 @@ repeat 2 times
 print x
 end"""
 
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+
 # ---------- ONBOARDING ----------
+
 if st.session_state.step == "onboarding":
 
     st.title("Natural Language Compiler")
@@ -68,7 +75,9 @@ if st.session_state.step == "onboarding":
                 st.session_state.step = "compiler"
                 st.rerun()
 
+
 # ---------- COMPILER PAGE ----------
+
 elif st.session_state.step == "compiler":
 
     user = st.session_state.user_data
@@ -84,6 +93,21 @@ elif st.session_state.step == "compiler":
         st.session_state.step = "onboarding"
         st.rerun()
 
+
+# ---------- HISTORY ----------
+
+    st.sidebar.subheader("History")
+
+    for i, item in enumerate(st.session_state.history):
+
+        if st.sidebar.button(f"Program {i+1}"):
+
+            st.session_state.program = item
+            st.rerun()
+
+
+# ---------- MAIN UI ----------
+
     st.title(f"Natural Language → {language} Compiler")
 
     program = st.text_area(
@@ -96,7 +120,9 @@ elif st.session_state.step == "compiler":
 
     st.divider()
 
+
 # ---------- LEXER ----------
+
     if st.button("Run Lexer"):
 
         tokens = tokenize(program)
@@ -104,7 +130,9 @@ elif st.session_state.step == "compiler":
         st.subheader("Lexer Output")
         st.write(tokens)
 
+
 # ---------- PARSER ----------
+
     if st.button("Run Parser"):
 
         tokens = tokenize(program)
@@ -113,8 +141,13 @@ elif st.session_state.step == "compiler":
         st.subheader("Parser Output")
         st.write(commands)
 
-# ---------- CODE GENERATION ----------
+
+# ---------- GENERATE CODE ----------
+
     if st.button("Generate Code"):
+
+        if program not in st.session_state.history:
+            st.session_state.history.append(program)
 
         tokens = tokenize(program)
         commands = parse(tokens)
@@ -124,7 +157,9 @@ elif st.session_state.step == "compiler":
         st.subheader("Generated Code")
         st.code(code)
 
+
 # ---------- RUN PROGRAM ----------
+
     if st.button("Run Program"):
 
         tokens = tokenize(program)
@@ -150,7 +185,9 @@ elif st.session_state.step == "compiler":
         except Exception as e:
             st.error(e)
 
+
 # ---------- FLOWCHART ----------
+
     if st.button("Generate Flowchart"):
 
         chart = generate_flowchart(program)
