@@ -1,4 +1,5 @@
 streamlit
 SpeechRecognition
-pydot
+pyaudio
 graphviz
+pydot
