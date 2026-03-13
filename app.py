@@ -31,7 +31,7 @@ if "history" not in st.session_state:
 
 if st.session_state.step == "onboarding":
 
-    st.title("Natural Language Compiler")
+    st.title("LOGICLOOM")
 
     with st.form("user_form"):
 
