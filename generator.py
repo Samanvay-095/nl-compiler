@@ -33,6 +33,10 @@ def generate(commands, language):
                 code.append("    "*indent + f"while {cmd[1]} {cmd[2]} {cmd[3]}:")
                 indent += 1
 
+            elif cmd[0] == "do":
+                code.append("    "*indent + "while True:")
+                indent += 1
+
             elif cmd[0] == "if":
                 code.append("    "*indent + f"if {cmd[1]} {cmd[2]} {cmd[3]}:")
                 indent += 1
@@ -47,51 +51,4 @@ def generate(commands, language):
 
         return "\n".join(code)
 
-
-    if language == "Java":
-
-        code = [
-            "public class Program {",
-            "public static void main(String[] args){"
-        ]
-
-        for cmd in commands:
-
-            if cmd[0] == "declare":
-                code.append(f"int {cmd[1]} = {cmd[2]};")
-
-            elif cmd[0] == "print":
-                code.append(f"System.out.println({cmd[1]});")
-
-            elif cmd[0] == "sum":
-                code.append(f"System.out.println({cmd[1]} + {cmd[2]});")
-
-        code.append("}")
-        code.append("}")
-
-        return "\n".join(code)
-
-
-    if language == "C++":
-
-        code = [
-            "#include <iostream>",
-            "using namespace std;",
-            "int main(){"
-        ]
-
-        for cmd in commands:
-
-            if cmd[0] == "declare":
-                code.append(f"int {cmd[1]} = {cmd[2]};")
-
-            elif cmd[0] == "print":
-                code.append(f"cout << {cmd[1]} << endl;")
-
-            elif cmd[0] == "sum":
-                code.append(f"cout << {cmd[1]} + {cmd[2]} << endl;")
-
-        code.append("return 0;")
-        code.append("}")
-
-        return "\n".join(code)
+    return "// Language not implemented"

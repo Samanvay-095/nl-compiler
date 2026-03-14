@@ -34,6 +34,9 @@ def parse(tokens):
         elif line[0] == "while":
             commands.append(("while", line[1], line[2], line[3]))
 
+        elif line[0] == "do":
+            commands.append(("do",))
+
         elif line[0] == "if":
             commands.append(("if", line[1], line[2], line[3]))
 
