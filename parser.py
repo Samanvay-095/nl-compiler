@@ -19,11 +19,26 @@ def parse(tokens):
         elif line[0] == "print" and "difference" in line:
             commands.append(("difference", line[-3], line[-1]))
 
+        elif line[0] == "print" and "subtraction" in line:
+            commands.append(("subtraction", line[-3], line[-1]))
+
+        elif line[0] == "print" and "division" in line:
+            commands.append(("division", line[-3], line[-1]))
+
         elif line[0] == "print":
             commands.append(("print", line[1]))
 
         elif line[0] == "repeat":
             commands.append(("loop", line[1]))
+
+        elif line[0] == "while":
+            commands.append(("while", line[1], line[2], line[3]))
+
+        elif line[0] == "if":
+            commands.append(("if", line[1], line[2], line[3]))
+
+        elif line[0] == "else":
+            commands.append(("else",))
 
         elif line[0] == "end":
             commands.append(("end",))
