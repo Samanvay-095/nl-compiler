@@ -15,7 +15,7 @@ if "step" not in st.session_state:
     st.session_state.user_data = {}
 
 if "program" not in st.session_state:
-    st.session_state.program = """SMASH YOUR CODE HERE"""
+    st.session_state.program = """Write what you THINK,not how to CODE it."""
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -24,7 +24,7 @@ if "history" not in st.session_state:
 
 if st.session_state.step == "onboarding":
 
-    st.title("Natural Language Compiler")
+    st.title("LOGICLOOM")
 
     with st.form("user_form"):
 
