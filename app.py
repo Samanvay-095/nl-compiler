@@ -96,9 +96,29 @@ elif st.session_state.step == "compiler":
             st.session_state.program = item
             st.rerun()
 
-# ---------- MAIN UI ----------
+# ---------- TITLE BAR WITH BUTTONS ----------
 
-    st.title(f"Natural Language → {language} Compiler")
+    col1, col2, col3, col4, col5, col6 = st.columns([5,1,1,1,1,1])
+
+    with col1:
+        st.title(f"Natural Language → {language} Compiler")
+
+    with col2:
+        run_lexer = st.button("Lexer")
+
+    with col3:
+        run_parser = st.button("Parser")
+
+    with col4:
+        run_generate = st.button("Generate")
+
+    with col5:
+        run_execute = st.button("Run")
+
+    with col6:
+        run_flow = st.button("Flow")
+
+# ---------- PROGRAM INPUT ----------
 
     program = st.text_area(
         "Write your program",
@@ -112,7 +132,7 @@ elif st.session_state.step == "compiler":
 
 # ---------- LEXER ----------
 
-    if st.button("Run Lexer"):
+    if run_lexer:
 
         tokens = tokenize(program)
 
@@ -121,7 +141,7 @@ elif st.session_state.step == "compiler":
 
 # ---------- PARSER ----------
 
-    if st.button("Run Parser"):
+    if run_parser:
 
         tokens = tokenize(program)
         commands = parse(tokens)
@@ -131,7 +151,7 @@ elif st.session_state.step == "compiler":
 
 # ---------- GENERATE CODE ----------
 
-    if st.button("Generate Code"):
+    if run_generate:
 
         if program not in st.session_state.history:
             st.session_state.history.append(program)
@@ -146,7 +166,7 @@ elif st.session_state.step == "compiler":
 
 # ---------- RUN PROGRAM ----------
 
-    if st.button("Run Program"):
+    if run_execute:
 
         tokens = tokenize(program)
         commands = parse(tokens)
@@ -173,7 +193,7 @@ elif st.session_state.step == "compiler":
 
 # ---------- FLOWCHART ----------
 
-    if st.button("Generate Flowchart"):
+    if run_flow:
 
         chart = generate_flowchart(program)
 
