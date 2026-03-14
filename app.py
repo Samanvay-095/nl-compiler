@@ -15,12 +15,7 @@ if "step" not in st.session_state:
     st.session_state.user_data = {}
 
 if "program" not in st.session_state:
-    st.session_state.program = """create variable x equal to 5
-create variable y equal to 10
-print sum of x and y
-repeat 2 times
-print x
-end"""
+    st.session_state.program = """SMASH YOUR CODE HERE"""
 
 if "history" not in st.session_state:
     st.session_state.history = []
