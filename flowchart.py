@@ -3,13 +3,35 @@ def generate_flowchart(program):
     lines = program.split("\n")
 
     chart = "digraph G {\n"
+    chart += "node [shape=oval];\n"
 
-    for i in range(len(lines)):
+    chart += 'start [label="start"];\n'
 
-        chart += f'node{i} [label="{lines[i]}"];\n'
+    prev = "start"
+    node_id = 0
+    last_line = ""
 
-        if i > 0:
-            chart += f"node{i-1} -> node{i};\n"
+    for line in lines:
+
+        line = line.strip()
+
+        if line == "":
+            continue
+
+        last_line = line.lower()
+
+        name = f"node{node_id}"
+
+        chart += f'{name} [label="{line}"];\n'
+        chart += f"{prev} -> {name};\n"
+
+        prev = name
+        node_id += 1
+
+    # ✅ add end only if not already end
+    if last_line != "end":
+        chart += 'end [label="end"];\n'
+        chart += f"{prev} -> end;\n"
 
     chart += "}"
 
