@@ -19,9 +19,6 @@ def generate(commands, language):
             elif cmd[0] == "sum":
                 code.append("    "*indent + f"print({cmd[1]} + {cmd[2]})")
 
-            elif cmd[0] == "difference" or cmd[0] == "subtraction":
-                code.append("    "*indent + f"print({cmd[1]} - {cmd[2]})")
-
             elif cmd[0] == "division":
                 code.append("    "*indent + f"print({cmd[1]} / {cmd[2]})")
 
@@ -39,6 +36,11 @@ def generate(commands, language):
 
             elif cmd[0] == "if":
                 code.append("    "*indent + f"if {cmd[1]} {cmd[2]} {cmd[3]}:")
+                indent += 1
+
+            elif cmd[0] == "elif":
+                indent -= 1
+                code.append("    "*indent + f"elif {cmd[1]} {cmd[2]} {cmd[3]}:")
                 indent += 1
 
             elif cmd[0] == "else":

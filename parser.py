@@ -16,12 +16,6 @@ def parse(tokens):
         elif line[0] == "print" and "sum" in line:
             commands.append(("sum", line[-3], line[-1]))
 
-        elif line[0] == "print" and "difference" in line:
-            commands.append(("difference", line[-3], line[-1]))
-
-        elif line[0] == "print" and "subtraction" in line:
-            commands.append(("subtraction", line[-3], line[-1]))
-
         elif line[0] == "print" and "division" in line:
             commands.append(("division", line[-3], line[-1]))
 
@@ -39,17 +33,25 @@ def parse(tokens):
 
         elif line[0] == "if":
 
-            if "greater" in line:
-                commands.append(("if", line[1], ">", line[-1]))
-
-            elif "less" in line:
+            if "less" in line:
                 commands.append(("if", line[1], "<", line[-1]))
+
+            elif "greater" in line:
+                commands.append(("if", line[1], ">", line[-1]))
 
             elif "equal" in line:
                 commands.append(("if", line[1], "==", line[-1]))
 
-            else:
-                commands.append(("if", line[1], line[2], line[3]))
+        elif line[0] == "elif":
+
+            if "less" in line:
+                commands.append(("elif", line[1], "<", line[-1]))
+
+            elif "greater" in line:
+                commands.append(("elif", line[1], ">", line[-1]))
+
+            elif "equal" in line:
+                commands.append(("elif", line[1], "==", line[-1]))
 
         elif line[0] == "else":
             commands.append(("else",))

@@ -8,7 +8,6 @@ from parser import parse
 from generator import generate
 from flowchart import generate_flowchart
 
-
 # ---------- SESSION STATE ----------
 
 if "step" not in st.session_state:
@@ -25,7 +24,6 @@ end"""
 
 if "history" not in st.session_state:
     st.session_state.history = []
-
 
 # ---------- ONBOARDING ----------
 
@@ -75,7 +73,6 @@ if st.session_state.step == "onboarding":
                 st.session_state.step = "compiler"
                 st.rerun()
 
-
 # ---------- COMPILER PAGE ----------
 
 elif st.session_state.step == "compiler":
@@ -93,7 +90,6 @@ elif st.session_state.step == "compiler":
         st.session_state.step = "onboarding"
         st.rerun()
 
-
 # ---------- HISTORY ----------
 
     st.sidebar.subheader("History")
@@ -104,7 +100,6 @@ elif st.session_state.step == "compiler":
 
             st.session_state.program = item
             st.rerun()
-
 
 # ---------- MAIN UI ----------
 
@@ -120,7 +115,6 @@ elif st.session_state.step == "compiler":
 
     st.divider()
 
-
 # ---------- LEXER ----------
 
     if st.button("Run Lexer"):
@@ -129,7 +123,6 @@ elif st.session_state.step == "compiler":
 
         st.subheader("Lexer Output")
         st.write(tokens)
-
 
 # ---------- PARSER ----------
 
@@ -140,7 +133,6 @@ elif st.session_state.step == "compiler":
 
         st.subheader("Parser Output")
         st.write(commands)
-
 
 # ---------- GENERATE CODE ----------
 
@@ -156,7 +148,6 @@ elif st.session_state.step == "compiler":
 
         st.subheader("Generated Code")
         st.code(code)
-
 
 # ---------- RUN PROGRAM ----------
 
@@ -184,7 +175,6 @@ elif st.session_state.step == "compiler":
 
         except Exception as e:
             st.error(e)
-
 
 # ---------- FLOWCHART ----------
 
