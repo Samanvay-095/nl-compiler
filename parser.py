@@ -38,7 +38,18 @@ def parse(tokens):
             commands.append(("do",))
 
         elif line[0] == "if":
-            commands.append(("if", line[1], line[2], line[3]))
+
+            if "greater" in line:
+                commands.append(("if", line[1], ">", line[-1]))
+
+            elif "less" in line:
+                commands.append(("if", line[1], "<", line[-1]))
+
+            elif "equal" in line:
+                commands.append(("if", line[1], "==", line[-1]))
+
+            else:
+                commands.append(("if", line[1], line[2], line[3]))
 
         elif line[0] == "else":
             commands.append(("else",))
