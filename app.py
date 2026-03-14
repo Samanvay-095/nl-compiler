@@ -103,7 +103,7 @@ elif st.session_state.step == "compiler":
     program = st.text_area(
         "Write your program",
         st.session_state.program,
-        height=250
+        height=70
     )
 
     st.session_state.program = program
