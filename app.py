@@ -188,7 +188,7 @@ elif st.session_state.step == "compiler":
 
     with right:
 
-        st.markdown("## Compiler")
+        st.markdown("##")
 
         run_lexer = st.button(
             "Run Lexer",
